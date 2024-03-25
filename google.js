@@ -28,7 +28,7 @@ function broadcast(message) {
 app.get('/', async(req, res) => {
     try {
         const {service, location} = req.query
-        console.log('the queries', service, location)
+        console.log('The Scraping Queries:', service,',', location)
         // Launch a headless browser
         const browser = await puppeteer.launch();
         console.log('puppeteer is launched')
@@ -47,7 +47,7 @@ app.get('/', async(req, res) => {
     
         // Wait for cards to load
         await page.waitForSelector('div.rgnuSb.xYjf2e');
-        broadcast('Cards selector has Loaded')
+        broadcast('Cards selector has Loaded') 
         console.log('Cards selector has Loaded')
     
         // Get all the business cards
@@ -65,16 +65,19 @@ app.get('/', async(req, res) => {
             if (url) {
                 const newPage = await browser.newPage();
                 console.log('created a page for:', url);
+                broadcast('created a page for:', url);
                 newPage.setDefaultNavigationTimeout(900000);
                 newPage.setDefaultTimeout(900000);
             
                 try {
                     await newPage.goto(url);
                     console.log(`Navigated to ${url}`);
+                    broadcast(`Navigated to ${url}`);
 
                     let tempEmails = []
                     const crawledEmails = await crawl(newPage);
                     console.log(`Found these emails: ${crawledEmails}`);
+                    broadcast(`Found ${crawledEmails.length} emails`);
                     tempEmails.push(...crawledEmails)
 
                     const rootUrl = new URL(url).hostname.replace(/^www\./, '');;
@@ -91,17 +94,15 @@ app.get('/', async(req, res) => {
                     
                     for (const link of internalLinks) {
                         console.log(`Visiting internal link: ${link}`);
+                        broadcast(`Visiting internal link: ${link}`);
                         await newPage.goto(link);
                         const secondaryCrawledEmails = await crawl(newPage);
                         console.log(`Found these emails on ${link}: ${secondaryCrawledEmails}`);
                         tempEmails.push(...secondaryCrawledEmails);
                     }
                     
-                    businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)] });
-                    
-                    
-                   
-
+                    broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
+                    businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'});
 
                 } catch (error) {
                     console.error(`Error navigating to ${url}: ${error}`);
@@ -114,7 +115,7 @@ app.get('/', async(req, res) => {
         console.log('this is the business data', businessData);
         const filteredBusinessData = businessData.filter(data => data.emails !== null);
         console.log('this is the filtered business data', filteredBusinessData);
-        res.send(JSON.stringify(filteredBusinessData));
+        res.status(200).send('Scraping complete');
         await browser.close();
     
     } catch (error) {
@@ -132,22 +133,17 @@ app.get('/', async(req, res) => {
             return anchorTags.map(a => a.href);
         });
     
-        // Filter links that are email links
         const emailLinks = links.filter(link => link.startsWith('mailto:'));
     
-        // Extract email addresses from email links
         emailLinks.forEach(link => {
             const email = link.replace('mailto:', '');
             crawledEmails.push(email);
         });
     
-        // Extract text content from the page
         const text = await page.evaluate(() => document.body.textContent);
     
-        // Regular expression to find email addresses
         const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     
-        // Find all email addresses in the text content
         let match;
         while ((match = emailRegex.exec(text)) !== null) {
             crawledEmails.push(match[0]);
