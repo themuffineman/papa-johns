@@ -77,16 +77,17 @@ app.get('/', async(req, res) => {
                     console.log(`Found these emails: ${crawledEmails}`);
                     tempEmails.push(...crawledEmails)
 
-                    const rootUrl = new URL(url).origin;
+                    const rootUrl = new URL(url).hostname;
                     console.log('heres the root url', rootUrl)
 
                     const anchorTags = await newPage.$$eval('a', anchors => anchors.map(anchor => anchor.href));
                     console.log('we found these a tags', anchorTags)
-                    const filteredAnchorTags = anchorTags.filter((anchor, index)=> ( index === anchorTags.indexOf(anchor))) // removing duplicates
+                    const filteredAnchorTags = [...new Set(anchorTags)]; // removing duplicates
+                    console.log('we removed duplicates', filteredAnchorTags)
                     const internalAnchorTags = filteredAnchorTags.filter((anchor)=> (anchor.includes(rootUrl))) // removing non root urls
+                    console.log('we removed the non root domains', internalAnchorTags)
                     const internalLinks = internalAnchorTags.filter(link => (link.includes('contact'))); // filtering down to contact links
-                    // const filteredInternalLinks = internalLinks.filter((link,index)=> (index === internalLinks.indexOf(link)))
-                    console.log('here are the internal links', internalLinks)
+                    console.log('only contact links', internalLinks)
                     
                     
                     
