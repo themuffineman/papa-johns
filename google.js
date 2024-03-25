@@ -77,7 +77,7 @@ app.get('/', async(req, res) => {
                     console.log(`Found these emails: ${crawledEmails}`);
                     tempEmails.push(...crawledEmails)
 
-                    const rootUrl = new URL(url).hostname;
+                    const rootUrl = new URL(url).hostname.replace(/^www\./, '');;
                     console.log('heres the root url', rootUrl)
 
                     const anchorTags = await newPage.$$eval('a', anchors => anchors.map(anchor => anchor.href));
@@ -89,27 +89,22 @@ app.get('/', async(req, res) => {
                     const internalLinks = internalAnchorTags.filter(link => (link.includes('contact'))); // filtering down to contact links
                     console.log('only contact links', internalLinks)
                     
+                    for (const link of internalLinks) {
+                        console.log(`Visiting internal link: ${link}`);
+                        await newPage.goto(link);
+                        const secondaryCrawledEmails = await crawl(newPage);
+                        console.log(`Found these emails on ${link}: ${secondaryCrawledEmails}`);
+                        tempEmails.push(...secondaryCrawledEmails);
+                    }
+                    
+                    businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)] });
                     
                     
-                    if (filteredInternalLinks.length > 10) {
-                        console.log(`Skipping processing of ${internalLinks.length} internal links.`);
-                    }
-                    else{
-                        
-                        for (const link of internalLinks) {
-                            console.log(`Visiting internal link: ${link}`);
-                            await newPage.goto(link);
-                            const secondaryCrawledEmails = await crawl(newPage);
-                            console.log(`Found these emails on ${link}: ${secondaryCrawledEmails}`);
-                            tempEmails.push(...secondaryCrawledEmails);
-                        }
-                    }
-            
+                   
 
-                    businessData.push({ name: businessName, url, emails: tempEmails });
 
                 } catch (error) {
-                    console.error(`Error navigating to ${url}`);
+                    console.error(`Error navigating to ${url}: ${error}`);
                 } finally {
                     await newPage.close();
                 }
@@ -117,7 +112,7 @@ app.get('/', async(req, res) => {
         }
 
         console.log('this is the business data', businessData);
-        const filteredBusinessData = businessData.filter(data => data !== null);
+        const filteredBusinessData = businessData.filter(data => data.emails !== null);
         console.log('this is the filtered business data', filteredBusinessData);
         res.send(JSON.stringify(filteredBusinessData));
         await browser.close();
