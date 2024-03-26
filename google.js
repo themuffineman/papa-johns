@@ -55,12 +55,18 @@ app.get('/', async(req, res) => {
         const cards = await page.$$('div[jsname="gam5T"]');
         
         // Use the regular expression to extract the last number
-        const textContent = await page.$eval('.AIYI7d', element => element.textContent);
-        const lastNumbersMatch = textContent.match(/\d+$/);
-        const lastNumber = lastNumbersMatch ? parseInt(lastNumbersMatch[0], 10) : null;
-
-        const pagesToScrape = (Math.floor(lastNumber / 20))*20
-        let pageNumber = 20
+        // const textContent = await page.$eval('.AIYI7d', element => element.textContent);
+        // console.log('heres the text content:', textContent)
+        // const lastNumbersMatch = textContent.match(/\d+$/);
+        // console.log('heres the lastNumber Match:', last)
+        // const lastNumber = lastNumbersMatch ? parseInt(lastNumbersMatch[0], 10) : null;
+        // console.log('heres the last number', lastNumber)
+        // broadcast(`heres the last number ${lastNumber}`)
+        
+        // const pagesToScrape = (Math.floor(lastNumber / 20))*20
+        // broadcast(`We're scraping ${pagesToScrape} sites`)
+        // console.log("We're scraping", pagesToScrape, 'sites')
+        // let pageNumber = 20
         const businessData = [];
     
     
@@ -120,13 +126,16 @@ app.get('/', async(req, res) => {
                 }
             }  
         }
+        let reachedMAxPages = false
 
-        while(pageNumber < pagesToScrape){
+        while(!reachedMAxPages){
+
+            let pageNumber = 20
 
             const page = await browser.newPage();
             console.log('initial page is opened')
 
-            broadcast("Google GMB Page Created");
+            broadcast(`Google GMB Page Created for page ${pageNUmber}`);
         
             page.setDefaultNavigationTimeout(900000); 
             page.setDefaultTimeout(900000);
@@ -142,7 +151,18 @@ app.get('/', async(req, res) => {
         
             // Get all the business cards
             const cards = await page.$$('div[jsname="gam5T"]');
-            const businessData = [];
+
+            const textContent = await page.$eval('.AIYI7d', element => element.textContent);
+            console.log('heres the text content:', textContent)
+            const lastNumbersMatch = textContent.match(/\d+$/);
+            console.log('heres the lastNumber Match:', lastNumbersMatch)
+            const lastNumber = lastNumbersMatch ? parseInt(lastNumbersMatch[0], 10) : null;
+            console.log('heres the last number', lastNumber)
+            broadcast(`heres the last number ${lastNumber}`)
+            
+            const pagesToScrape = (Math.floor(lastNumber / 20))*20
+            broadcast(`We're scraping ${pagesToScrape} sites`)
+            console.log("We're scraping", pagesToScrape, 'sites')
         
         
         
@@ -205,6 +225,11 @@ app.get('/', async(req, res) => {
             broadcast(`Finished Scraping Page ${pageNumber}`)
             console.log(`Finished Scraping Page ${pageNumber}`)
             pageNumber = pageNumber+20
+            if(pageNumber >= pagesToScrape){
+                reachedMAxPages = true
+                broadcast('Reached Max Pages')
+                console.log('Reached Max Pages')
+            }
         }
 
         console.log('this is the business data', businessData);
