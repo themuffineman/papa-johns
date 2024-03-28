@@ -54,19 +54,7 @@ app.get('/', async(req, res) => {
         // Get all the business cards
         const cards = await page.$$('div[jsname="gam5T"]');
         
-        // Use the regular expression to extract the last number
-        // const textContent = await page.$eval('.AIYI7d', element => element.textContent);
-        // console.log('heres the text content:', textContent)
-        // const lastNumbersMatch = textContent.match(/\d+$/);
-        // console.log('heres the lastNumber Match:', last)
-        // const lastNumber = lastNumbersMatch ? parseInt(lastNumbersMatch[0], 10) : null;
-        // console.log('heres the last number', lastNumber)
-        // broadcast(`heres the last number ${lastNumber}`)
         
-        // const pagesToScrape = (Math.floor(lastNumber / 20))*20
-        // broadcast(`We're scraping ${pagesToScrape} sites`)
-        // console.log("We're scraping", pagesToScrape, 'sites')
-        // let pageNumber = 20
         const businessData = [];
     
     
@@ -126,6 +114,7 @@ app.get('/', async(req, res) => {
                 }
             }  
         }
+        
         let reachedMAxPages = false
 
         while(!reachedMAxPages){
@@ -135,7 +124,7 @@ app.get('/', async(req, res) => {
             const page = await browser.newPage();
             console.log('initial page is opened')
 
-            broadcast(`Google GMB Page Created for page ${pageNUmber}`);
+            broadcast(`Google GMB Page Created for page ${pageNumber}`);
         
             page.setDefaultNavigationTimeout(900000); 
             page.setDefaultTimeout(900000);
