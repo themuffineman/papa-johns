@@ -114,7 +114,7 @@ app.get('/', async(req, res) => {
                 }
             }  
         }
-        
+
         let reachedMAxPages = false
 
         while(!reachedMAxPages){
@@ -227,7 +227,7 @@ app.get('/', async(req, res) => {
         res.status(200).send('Scraping complete');
         await browser.close();
     
-    }catch(error) {
+    }catch(error) { 
         console.error('Error:', error);
         broadcast('Error occurred: ' + error.message);
         res.status(500).send('Internal Server Error');
