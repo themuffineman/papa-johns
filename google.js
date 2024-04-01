@@ -77,6 +77,9 @@ app.get('/', async(req, res) => {
                     console.log(`Navigated to ${url}`);
                     broadcast(`Navigated to ${url}`);
 
+                    const screenshot = await page.screenshot();
+                    const base64Screenshot = screenshot.toString('base64');
+
                     let tempEmails = []
                     const crawledEmails = await crawl(newPage);
                     console.log(`Found these emails: ${crawledEmails}`);
@@ -105,7 +108,7 @@ app.get('/', async(req, res) => {
                     }
                     
                     broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
-                    businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'});
+                    businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot});
 
                 } catch (error) {
                     console.error(`Error navigating to ${url}: ${error}`);
@@ -129,7 +132,7 @@ app.get('/', async(req, res) => {
             page.setDefaultNavigationTimeout(900000); 
             page.setDefaultTimeout(900000);
 
-            await page.goto(`https://www.google.com/localservices/prolist?g2lbs=AIQllVxKz861QWvdO5Yk-8jN09vXU1BbEBmkh2Hm2qFZiXXQ4hcyDxFz7cpcWpincZ-7PEnbuHBsIxferaGVGQgklsLT-u8Wjr7UEh4SXkyXz1reSiOAv3B8EPhD8UPRYAD2jEVvB8aM&hl=en-NA&gl=na&cs=1&ssta=1&q=${service}%20in%20${location}&oq=${service}%20in%20${location}&slp=MgA6HENoTUk5dVNhdk1tUmhRTVZnNVZRQmgyd2JRWjNSAggCYACSAZ0CCgsvZy8xdGg2ZjZ4ZwoNL2cvMTFoY3c1ZDltZAoLL2cvMXRkaDQ4aDMKCy9nLzF3eWM0cm1kCgsvZy8xdGtzajVkdwoML2cvMTJxaDl3OGZkCg0vZy8xMWc2bmwwbGY1CgsvZy8xdHQxdDJubgoLL2cvMXRobDE4MHMKCy9nLzF0ZGNnc3Y0CgsvZy8xdGc3c2RmNwoNL2cvMTFjbXk0bjl2NAoLL2cvMXRkNGR6cTEKDS9nLzExYndxYmswd2YKCy9nLzF0ZnNuZDRfCg0vZy8xMWI3bHBtOGIxCgsvZy8xdHp6dng1bAoLL2cvMXRteTVnc2gKCy9nLzF0a2I1aGgwCg0vZy8xMWJ4OGNteHM4EgQSAggBEgQKAggBmgEGCgIXGRAA&src=2&serdesk=1&sa=X&ved=2ahUKEwje6ZS8yZGFAxVdRkEAHcLfDt8QjGp6BAgmEAE&scp=Cg5nY2lkOmFyY2hpdGVjdBJMEhIJSTKCCzZwQIYRPN4IGI8c6xYaEgkLNjLkhLXqVBFCt95Dkrk7HCIKVGV4YXMsIFVTQSoUDV1uZg8VcypvwB3BkMEVJTvOQ8gwABoKYXJjaGl0ZWN0cyITYXJjaGl0ZWN0cyBpbiB0ZXhhcyoJQXJjaGl0ZWN0&lci=${pageNumber}`);
+            await page.goto(`https://www.google.com/localservices/prolist?g2lbs=AIQllVxKz861QWvdO5Yk-8jN09vXU1BbEBmkh2Hm2qFZiXXQ4hcyDxFz7cpcWpincZ-7PEnbuHBsIxferaGVGQgklsLT-u8Wjr7UEh4SXkyXz1reSiOAv3B8EPhD8UPRYAD2jEVvB8aM&hl=en-US&gl=us&cs=1&ssta=1&q=${service}%20in%20${location}&oq=${service}%20in%20${location}&slp=MgA6HENoTUk5dVNhdk1tUmhRTVZnNVZRQmgyd2JRWjNSAggCYACSAZ0CCgsvZy8xdGg2ZjZ4ZwoNL2cvMTFoY3c1ZDltZAoLL2cvMXRkaDQ4aDMKCy9nLzF3eWM0cm1kCgsvZy8xdGtzajVkdwoML2cvMTJxaDl3OGZkCg0vZy8xMWc2bmwwbGY1CgsvZy8xdHQxdDJubgoLL2cvMXRobDE4MHMKCy9nLzF0ZGNnc3Y0CgsvZy8xdGc3c2RmNwoNL2cvMTFjbXk0bjl2NAoLL2cvMXRkNGR6cTEKDS9nLzExYndxYmswd2YKCy9nLzF0ZnNuZDRfCg0vZy8xMWI3bHBtOGIxCgsvZy8xdHp6dng1bAoLL2cvMXRteTVnc2gKCy9nLzF0a2I1aGgwCg0vZy8xMWJ4OGNteHM4EgQSAggBEgQKAggBmgEGCgIXGRAA&src=2&serdesk=1&sa=X&ved=2ahUKEwje6ZS8yZGFAxVdRkEAHcLfDt8QjGp6BAgmEAE&scp=Cg5nY2lkOmFyY2hpdGVjdBJMEhIJSTKCCzZwQIYRPN4IGI8c6xYaEgkLNjLkhLXqVBFCt95Dkrk7HCIKVGV4YXMsIFVTQSoUDV1uZg8VcypvwB3BkMEVJTvOQ8gwABoKYXJjaGl0ZWN0cyITYXJjaGl0ZWN0cyBpbiB0ZXhhcyoJQXJjaGl0ZWN0&lci=${pageNumber}`);
             broadcast(`Google GMB page ${pageNumber} navigated`);
             console.log("Google GMB Page Navigated");
     
@@ -173,6 +176,10 @@ app.get('/', async(req, res) => {
                         console.log(`Navigated to ${url}`);
                         broadcast(`Navigated to ${url}`);
 
+                        const screenshot = await page.screenshot();
+                        const base64Screenshot = screenshot.toString('base64');
+
+
                         let tempEmails = []
                         const crawledEmails = await crawl(newPage);
                         console.log(`Found these emails: ${crawledEmails}`);
@@ -201,7 +208,7 @@ app.get('/', async(req, res) => {
                         }
                         
                         broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
-                        businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'});
+                        businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot});
 
                     } catch (error) {
                         console.error(`Error navigating to ${url}: ${error}`);
