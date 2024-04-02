@@ -37,7 +37,6 @@ app.get('/', async(req, res) => {
         // Launch a headless browser
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: `/usr/bin/google-chrome`,
             args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
         });
         console.log('puppeteer is launched')
