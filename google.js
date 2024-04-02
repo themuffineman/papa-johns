@@ -1,11 +1,16 @@
 const express = require('express');
+const cors = require(cors)
 const puppeteer = require('puppeteer');
 const WebSocket = require('ws');
 
 const app = express();
+
 const port = 8080;
 
 
+app.use(cors({
+    origin: '*'
+  }))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
