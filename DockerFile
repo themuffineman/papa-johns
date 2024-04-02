@@ -1,0 +1,12 @@
+FROM ghcr.io/puppeteer/puppeteer:22.6.0
+
+ENV PUPPETEER_SKPI_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+WORKDIR=/ur/src/app
+
+COPY package*.json ./
+
+RUN npm ci
+COPY . .
+
+CMD ["node", "google.js"]
