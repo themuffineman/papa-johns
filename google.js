@@ -36,7 +36,9 @@ app.get('/', async(req, res) => {
         console.log('The Scraping Queries:', service,',', location)
         // Launch a headless browser
         const browser = await puppeteer.launch({
-            headless: true
+            headless: true,
+            executablePath: `/usr/bin/google-chrome`,
+            args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
         });
         console.log('puppeteer is launched')
         const page = await browser.newPage();
