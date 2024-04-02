@@ -35,7 +35,9 @@ app.get('/', async(req, res) => {
         const {service, location} = req.query
         console.log('The Scraping Queries:', service,',', location)
         // Launch a headless browser
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: true
+        });
         console.log('puppeteer is launched')
         const page = await browser.newPage();
         console.log('initial page is opened')
