@@ -1,8 +1,9 @@
 FROM ghcr.io/puppeteer/puppeteer:22.6.0
 
-ENV PUPPETEER_SKPI_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-WORKDIR=/ur/src/app
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable \
+    NODE_ENV=production
+WORKDIR=/usr/src/app
 
 COPY package*.json ./
 

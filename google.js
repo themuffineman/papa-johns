@@ -1,4 +1,5 @@
 const express = require('express');
+require(dotenv).config()
 const cors = require('cors')
 const puppeteer = require('puppeteer');
 const WebSocket = require('ws');
@@ -36,8 +37,16 @@ app.get('/', async(req, res) => {
         console.log('The Scraping Queries:', service,',', location)
         // Launch a headless browser
         const browser = await puppeteer.launch({
-            headless: true,
-            args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
+            executablePath: process.env.NODE_ENV === 'production' ?
+                process.env.PUPPETERR_EXECUTABLE_PATH:
+                puppeteer.executablePath(),
+            args: [
+                `--disable-setuid-sandbox`,
+                // `--single-process`,
+                // `--no-sandbox,`,
+                // `--no-zygote`,
+                `--disable-dev-shm-usage`
+            ],
         });
         console.log('puppeteer is launched')
         const page = await browser.newPage();
