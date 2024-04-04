@@ -11,7 +11,7 @@ const port = 8080;
 
 app.use(cors({
     origin: '*'
-  }))
+}))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -96,6 +96,7 @@ app.get('/', async(req, res) => {
 
                     const screenshot = await page.screenshot();
                     const base64Screenshot = screenshot.toString('base64');
+                    console.log('heres the screenshot', base64Screenshot)
 
                     let tempEmails = []
                     const crawledEmails = await crawl(newPage);
