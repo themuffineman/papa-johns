@@ -1,5 +1,5 @@
 const express = require('express');
-require(dotenv).config()
+require('dotenv').config()
 const cors = require('cors')
 const puppeteer = require('puppeteer');
 const WebSocket = require('ws');
