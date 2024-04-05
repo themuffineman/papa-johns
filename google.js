@@ -72,7 +72,7 @@ app.get('/', async(req, res) => {
         const cards = await page.$$('div[jsname="gam5T"]');
         
         
-        const businessData = [];
+        // const businessData = [];
     
     
        
@@ -96,7 +96,7 @@ app.get('/', async(req, res) => {
 
                     const screenshot = await page.screenshot();
                     const base64Screenshot = screenshot.toString('base64');
-                    console.log('heres the screenshot', base64Screenshot)
+                    // console.log('heres the screenshot', base64Screenshot)
 
                     let tempEmails = []
                     const crawledEmails = await crawl(newPage);
@@ -104,7 +104,7 @@ app.get('/', async(req, res) => {
                     broadcast(`Found ${crawledEmails.length} emails`);
                     tempEmails.push(...crawledEmails)
 
-                    const rootUrl = new URL(url).hostname.replace(/^www\./, '');;
+                    const rootUrl = new URL(url).hostname.replace(/^www\./, '');
                     console.log('heres the root url', rootUrl)
 
                     const anchorTags = await newPage.$$eval('a', anchors => anchors.map(anchor => anchor.href));
@@ -125,8 +125,8 @@ app.get('/', async(req, res) => {
                         tempEmails.push(...secondaryCrawledEmails);
                     }
                     
-                    broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
-                    businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot});
+                    broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot}));
+                    // businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot});
 
                 } catch (error) {
                     console.error(`Error navigating to ${url}: ${error}`);
@@ -225,8 +225,8 @@ app.get('/', async(req, res) => {
                             tempEmails.push(...secondaryCrawledEmails);
                         }
                         
-                        broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
-                        businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot});
+                        broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', imageUrl: bas}));
+                        // businessData.push({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot});
 
                     } catch (error) {
                         console.error(`Error navigating to ${url}: ${error}`);
@@ -246,7 +246,7 @@ app.get('/', async(req, res) => {
             }
         }
 
-        console.log('this is the business data', businessData);
+        // console.log('this is the business data', businessData);
         // const filteredBusinessData = businessData.filter(data => data.emails !== null);
         // console.log('this is the filtered business data', filteredBusinessData);
         res.status(200).send('Scraping complete');
