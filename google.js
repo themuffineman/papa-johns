@@ -32,6 +32,7 @@ function broadcast(message) {
 }
 
 app.get('/', async(req, res) => {
+    let browser;
     try {
         const {service, location, pageNumber} = req.query
 
@@ -40,7 +41,7 @@ app.get('/', async(req, res) => {
         }
         console.log('The Scraping Queries:', service,',', location, ',', pageNumber)
        
-        const browser = await puppeteer.launch({
+        browser = await puppeteer.launch({
             executablePath: process.env.NODE_ENV === 'production' ?
                 process.env.PUPPETERR_EXECUTABLE_PATH:
                 puppeteer.executablePath(),
@@ -54,8 +55,8 @@ app.get('/', async(req, res) => {
         });
         console.log('Puppeteer is launched')
         broadcast('Puppeteer is up and running')
+        
         const page = await browser.newPage();
-
         page.setDefaultNavigationTimeout(900000); 
         page.setDefaultTimeout(900000);
     
