@@ -133,15 +133,18 @@ app.get('/scrape', async(req, res) => {
 
                 //Wait for input element and search
                 await page.waitForSelector('input#qjZKOb.MDhB7');
+                console.log('Search selector has appeared')
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                await page.waitForSelector('div.rgnuSb.xYjf2e');
                 const newUrl = `${page.url()}&lci=${intPageNumber*20}`;
+
 
                 await page.goto(newUrl);
         
                 // Wait for cards to load
-                await page.waitForSelector('div.rgnuSb.xYjf2e');
                 const cards = await page.$$('div[jsname="gam5T"]');
             
                 // max pages to scrape
@@ -177,7 +180,7 @@ app.get('/scrape', async(req, res) => {
                             const filteredAnchorTags = [...new Set(anchorTags)]; // removing duplicates
                             const internalAnchorTags = filteredAnchorTags.filter((anchor)=> (anchor.includes(rootUrl))) // removing non root urls
                             const internalLinks = internalAnchorTags.filter(link => (link.includes('contact'))); // filtering down to contact links
-                            
+                            s
                             for (const link of internalLinks) {
                                 await newPage.goto(link);
                                 const secondaryCrawledEmails = await crawl(newPage);
