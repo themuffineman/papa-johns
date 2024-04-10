@@ -36,9 +36,9 @@ app.get('/', async(req, res) => {
     try {
         const {service, location, pageNumber} = req.query
 
-        if (!service || !location || !pageNumber){
-            throw new Error('Queries are undefined')
-        }
+        // if (!service || !location || !pageNumber){
+        //     throw new Error('Queries are undefined')
+        // }
         console.log('The Scraping Queries:', service,',', location, ',', pageNumber)
        
         browser = await puppeteer.launch({
