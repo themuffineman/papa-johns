@@ -32,8 +32,8 @@ function broadcast(message) {
 }
 
 app.get('/scrape', async(req, res) => {
+    let browser;
     try {
-        let browser;
         const {service, location, pageNumber} = req.query
 
         if (service && location && pageNumber){
