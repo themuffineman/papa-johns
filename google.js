@@ -67,6 +67,7 @@ app.get('/scrape', async(req, res) => {
 
                 //Wait for input element and search
                 await page.waitForSelector('input#qjZKOb.MDhB7');
+                console.log('Search Selector has appeared')
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
@@ -182,7 +183,7 @@ app.get('/scrape', async(req, res) => {
                             const filteredAnchorTags = [...new Set(anchorTags)]; // removing duplicates
                             const internalAnchorTags = filteredAnchorTags.filter((anchor)=> (anchor.includes(rootUrl))) // removing non root urls
                             const internalLinks = internalAnchorTags.filter(link => (link.includes('contact'))); // filtering down to contact links
-                            
+
                             for (const link of internalLinks) {
                                 await newPage.goto(link);
                                 const secondaryCrawledEmails = await crawl(newPage);
