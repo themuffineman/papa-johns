@@ -182,7 +182,7 @@ app.get('/scrape', async(req, res) => {
                             const filteredAnchorTags = [...new Set(anchorTags)]; // removing duplicates
                             const internalAnchorTags = filteredAnchorTags.filter((anchor)=> (anchor.includes(rootUrl))) // removing non root urls
                             const internalLinks = internalAnchorTags.filter(link => (link.includes('contact'))); // filtering down to contact links
-                            s
+                            
                             for (const link of internalLinks) {
                                 await newPage.goto(link);
                                 const secondaryCrawledEmails = await crawl(newPage);
