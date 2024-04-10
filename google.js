@@ -70,6 +70,8 @@ app.get('/scrape', async(req, res) => {
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
+                await new Promise(resolve => setTimeout(resolve, 10000));
+
             
                 // Wait for cards to load
                 await page.waitForSelector('div.rgnuSb.xYjf2e');
