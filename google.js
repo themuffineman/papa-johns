@@ -88,9 +88,7 @@ app.get('/', async(req, res) => {
                         await newPage.goto(url);
                         console.info(`Navigated to ${url}`);
                         broadcast(`Navigated to ${url}`);
-    
-                        const screenshot = await page.screenshot();
-                        const base64Screenshot = screenshot.toString('base64');
+
     
                         let tempEmails = []
                         const crawledEmails = await crawl(newPage);
@@ -110,7 +108,7 @@ app.get('/', async(req, res) => {
                             tempEmails.push(...secondaryCrawledEmails);
                         }
                         
-                        broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot}));
+                        broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
     
                     } catch (error) {
                         console.error(`Error navigating to ${url}: ${error}`);
@@ -152,9 +150,6 @@ app.get('/', async(req, res) => {
                         await newPage.goto(url);
                         broadcast(`Navigated to ${url}`);
 
-                        const screenshot = await page.screenshot();
-                        const base64Screenshot = screenshot.toString('base64');
-
 
                         let tempEmails = []
                         const crawledEmails = await crawl(newPage);
@@ -174,7 +169,7 @@ app.get('/', async(req, res) => {
                             tempEmails.push(...secondaryCrawledEmails);
                         }
                         
-                        broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google', screenshot: base64Screenshot}));
+                        broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
 
                     } catch (error) {
                         console.error(`Error navigating to ${url}: ${error}`);
