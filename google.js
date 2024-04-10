@@ -116,6 +116,7 @@ app.get('/scrape', async(req, res) => {
                         }
                     }  
                 }
+                console.log('Scraping Complete')
                 res.status(200).send('Scraping complete');
             }
             else if(pageNumber > 1){
@@ -177,6 +178,8 @@ app.get('/scrape', async(req, res) => {
                         }
                     }  
                 } 
+                res.status(200).send('Scraping complete');
+                console.log('Scraping Complete')
                 broadcast(`Finished Scraping Page ${pageNumber}`)
             }
             
