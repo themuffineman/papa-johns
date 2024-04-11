@@ -188,7 +188,7 @@ app.get('/scrape', async(req, res) => {
             
                     if (url) {
                         const newPage = await browser.newPage();
-                        newPage.setDefaultNavigationTimeout(900000);
+                        newPage.setDefaultNavigationTimeout(900000)
                         newPage.setDefaultTimeout(900000);
                     
                         try {
