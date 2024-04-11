@@ -80,7 +80,7 @@ app.get('/scrape', async(req, res) => {
                         console.log('Page has navigated to a new URL:', newUrl);
                         exitLoop=true
                     }
-                    setTimeout(()=> console('Url is still the same'), 5000)
+                    setTimeout(()=> console.log('Url is still the same'), 5000)
                 }
 
                 // Wait for cards to load
@@ -159,7 +159,7 @@ app.get('/scrape', async(req, res) => {
                         console.log('Page has navigated to a new URL:', newUrl);
                         exitLoop=true
                     }
-                    setTimeout(()=> console('Url is still the same'), 5000)
+                    setTimeout(()=> console.log('Url is still the same'), 5000)
                 }
                 const newUrl = page.url();
                 const editedUrl = newUrl + `&lci=${intPageNumber*20}`;
