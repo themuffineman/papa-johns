@@ -65,6 +65,7 @@ app.get('/scrape', async(req, res) => {
                 await page.goto('https://www.google.com/localservices/prolist?g2lbs=AIQllVy8_BwcU5s9UwVyCtx14C0m8XSYJRnqCjpDSn8f1_V0I1sAIxnl7-RL40t8v15xdWPk3PmLf4jse7a_f5ET1nILbEqJ6s1FL_FpKVHzVmDVp2S4KZUqxOVAYPcsgyvdWt8K-AOL&hl=en-NA&gl=na&cs=1&ssta=1&q=architects%20in%20texas&oq=architects%20in%20texas&slp=MgBSAggCYACSAZsCCgsvZy8xdGg2ZjZ4ZwoNL2cvMTFoY3c1ZDltZAoLL2cvMXRkaDQ4aDMKCy9nLzF3eWM0cm1kCgsvZy8xdGtzajVkdwoML2cvMTJxaDl3OGZkCg0vZy8xMWc2bmwwbGY1CgsvZy8xdHQxdDJubgoLL2cvMXRobDE4MHMKCy9nLzF0ZGNnc3Y0Cg0vZy8xMWNteTRuOXY0CgsvZy8xdGQ0ZHpxMQoNL2cvMTFid3FiazB3ZgoLL2cvMXRmc25kNF8KCy9nLzF0Zjg3Z3dwCgsvZy8xdGc3c2RmNwoNL2cvMTFiN2xwbThiMQoLL2cvMXR6enZ4NWwKCy9nLzF0bXk1Z3NoCgsvZy8xdGtiNWhoMBIEEgIIARIECgIIAZoBBgoCFxkQAA%3D%3D&src=2&serdesk=1&sa=X&ved=2ahUKEwjL6pbpv7qFAxV90AIHHYWEDc8QjGp6BAglEAE&scp=Cg5nY2lkOmFyY2hpdGVjdBJMEhIJSTKCCzZwQIYRPN4IGI8c6xYaEgkLNjLkhLXqVBFCt95Dkrk7HCIKVGV4YXMsIFVTQSoUDV1uZg8VcypvwB3BkMEVJTvOQ8gwABoKYXJjaGl0ZWN0cyITYXJjaGl0ZWN0cyBpbiB0ZXhhcyoJQXJjaGl0ZWN0')
                 console.info('Navigated To GMB Website')
                 broadcast('Navigated To GMB Website')
+                const currentUrl = page.url();
 
                 //Wait for input element and search
                 await page.waitForSelector('input#qjZKOb.MDhB7');
@@ -159,7 +160,7 @@ app.get('/scrape', async(req, res) => {
                         console.log('Page has navigated to a new URL:', newUrl);
                         exitLoop=true
                     }
-                    setTimeout(()=> console.log('Url is still the same'), 5000)
+                    await new Promise(resolve => setTimeout(resolve, 10000));
                 }
                 const newUrl = page.url();
                 const editedUrl = newUrl + `&lci=${intPageNumber*20}`;
@@ -192,6 +193,7 @@ app.get('/scrape', async(req, res) => {
                     
                         try {
                             await newPage.goto(url);
+                            console.info(`Navigated to ${url}`);
                             broadcast(`Navigated to ${url}`);
     
     
