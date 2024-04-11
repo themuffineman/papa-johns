@@ -72,7 +72,7 @@ app.get('/scrape', async(req, res) => {
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
                 await page.waitForNavigation({ waitUntil: 'networkidle0'})
-                await page.waitForSelector('span.VfPpkd-vQzf8d:has-text("Previous")');
+                await page.waitForSelector('span.VfPpkd-vQzf8d:has-text("< Previous")');
                 console.log('Previous Span has appeared')
             
                 // Wait for cards to load
@@ -142,7 +142,7 @@ app.get('/scrape', async(req, res) => {
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
                 await page.waitForNavigation({ waitUntil: 'networkidle0'})
-                await page.waitForSelector('span.VfPpkd-vQzf8d:has-text("Previous")');
+                await page.waitForSelector('span.VfPpkd-vQzf8d:has-text("< Previous")');
                 console.log('Previous Span has appeared')
 
 
