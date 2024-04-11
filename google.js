@@ -71,8 +71,9 @@ app.get('/scrape', async(req, res) => {
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
-                await page.waitForSelector('div.VfPpkd-RLmnJb');
-                await page.waitForNavigation({ waitUntil: 'networkidle0' })
+                await page.waitForNavigation({ waitUntil: 'networkidle0'})
+                await page.waitForSelector('span.VfPpkd-vQzf8d:has-text("Previous")');
+                console.log('Previous Span has appeared')
             
                 // Wait for cards to load
                 await page.waitForSelector('div.rgnuSb.xYjf2e');
@@ -140,9 +141,9 @@ app.get('/scrape', async(req, res) => {
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
-                await page.waitForSelector('div.VfPpkd-RLmnJb');
-                await page.waitForNavigation({ waitUntil: 'networkidle0' })
-                const newUrl = `${page.url()}&lci=${intPageNumber*20}`;
+                await page.waitForNavigation({ waitUntil: 'networkidle0'})
+                await page.waitForSelector('span.VfPpkd-vQzf8d:has-text("Previous")');
+                console.log('Previous Span has appeared')
 
 
                 await page.goto(newUrl);
