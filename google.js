@@ -71,9 +71,8 @@ app.get('/scrape', async(req, res) => {
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
+                await page.waitForSelector('div.VfPpkd-RLmnJb');
                 await page.waitForNavigation({ waitUntil: 'networkidle0' })
-                await new Promise(resolve => setTimeout(resolve, 10000));
-
             
                 // Wait for cards to load
                 await page.waitForSelector('div.rgnuSb.xYjf2e');
@@ -141,9 +140,8 @@ app.get('/scrape', async(req, res) => {
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await page.waitForSelector('div.VfPpkd-RLmnJb');
                 await page.waitForNavigation({ waitUntil: 'networkidle0' })
-                await page.waitForSelector('div.rgnuSb.xYjf2e');
                 const newUrl = `${page.url()}&lci=${intPageNumber*20}`;
 
 
