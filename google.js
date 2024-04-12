@@ -68,7 +68,6 @@ app.get('/scrape', async(req, res) => {
 
                 //Wait for input element and search
                 await page.waitForSelector('input#qjZKOb.MDhB7');
-                console.log('Search Selector has appeared')
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
@@ -76,10 +75,7 @@ app.get('/scrape', async(req, res) => {
                 let exitLoop = false
                 while(!exitLoop){
                     const newUrl = page.url();
-                    console.log('here the new url', newUrl)
-                    console.log('here the old url', currentUrl)
                     if(newUrl !== currentUrl){
-                        console.log('Page has navigated to a new URL:', newUrl);
                         exitLoop=true
                     }else{
                         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -152,7 +148,6 @@ app.get('/scrape', async(req, res) => {
                 
                 //Wait for input element and search
                 await page.waitForSelector('input#qjZKOb.MDhB7');
-                console.log('Search selector has appeared')
                 await page.$eval('input#qjZKOb.MDhB7', input => input.value = '');
                 await page.type('input#qjZKOb.MDhB7', `${service} in ${location}`);
                 await page.keyboard.press('Enter');
@@ -161,7 +156,6 @@ app.get('/scrape', async(req, res) => {
                 while(!exitLoop){
                     const newUrl = page.url();
                     if(newUrl !== currentUrl){
-                        console.log('Page has navigated to a new URL:', newUrl);
                         exitLoop=true
                     }else{
                         await new Promise(resolve => setTimeout(resolve, 10000));
