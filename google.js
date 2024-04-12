@@ -16,7 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
@@ -30,6 +29,19 @@ function broadcast(message) {
         }
     });
 }
+
+wss.on('close', () => {
+    console.log('WebSocket connection closed.');
+});
+
+process.on('exit', () => {
+    // Close the WebSocket connection
+    if (ws.readyState === WebSocket.OPEN) {
+        wss.close();
+    }
+});
+
+
 
 app.get('/scrape', async(req, res) => {
     let browser;
