@@ -85,6 +85,8 @@ app.get('/scrape', async(req, res) => {
                         await new Promise(resolve => setTimeout(resolve, 5000));
                     }
                 }
+                const newUrl = page.url()
+                await page.goto(newUrl)
 
                 // Wait for cards to load
                 await page.waitForSelector('div.rgnuSb.xYjf2e');
