@@ -76,6 +76,8 @@ app.get('/scrape', async(req, res) => {
                 let exitLoop = false
                 while(!exitLoop){
                     const newUrl = page.url();
+                    console.log('here the new url', newUrl)
+                    console.log('here the old url', currentUrl)
                     if(newUrl !== currentUrl){
                         console.log('Page has navigated to a new URL:', newUrl);
                         exitLoop=true
