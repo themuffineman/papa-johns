@@ -30,16 +30,31 @@ function broadcast(message) {
     });
 }
 
-wss.on('close', () => {
-    console.log('WebSocket connection closed.');
+server.on('close', () => {
+    wss.clients.forEach(client => {
+        client.terminate();
+    });
+    console.log('WebSocket connections closed.');
 });
 
 process.on('exit', () => {
     // Close the WebSocket connection
     if (ws.readyState === WebSocket.OPEN) {
+        wss.clients.forEach(client => {
+            client.terminate();
+        });
         wss.close();
     }
 });
+app.get('/cancel', async(req,res)=>{
+    wss.clients.forEach(client => {
+        client.terminate();
+    });
+    wss.close();
+    res.status(200).send('Connections Manually Closed');
+    console.log('Connections Manually Closed')
+    process.exit(0);
+})
 
 
 
@@ -276,6 +291,7 @@ app.get('/scrape', async(req, res) => {
         return crawledEmails;
     }
 });
+
 
 
 
