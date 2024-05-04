@@ -287,8 +287,12 @@ app.get('/scrape', async(req, res) => {
         while ((match = emailRegex.exec(text)) !== null) {
             crawledEmails.push(match[0]);
         }
+
+        const finalEmails = crawledEmails.filter((email)=>{
+            return (email != undefined && email != null)
+        })
     
-        return crawledEmails;
+        return finalEmails;
     }
 });
 
