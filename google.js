@@ -20,7 +20,6 @@ async function getLeads(){
         locationCollection = client.db('pendora').collection('locations')
         intermidaryCollection = client.db('pendora').collection('intermediary')
         const document = await locationCollection.findOne()
-        console.log('Heres the document', document)
 
         const cities = document.cities
         const service = 'Architects'
@@ -44,13 +43,13 @@ async function getLeads(){
         console.log('Puppeteer is launched')
 
 
+        //Loop to scrape the whole city
         while(emailsSent < 10){
            
             const page = await browser.newPage();
             page.setDefaultNavigationTimeout(900000); 
             page.setDefaultTimeout(900000);
 
-            //Loop to scrape the whole city
             while(startingPage < maxpages && emailsSent < 10){
 
                 if(startingPage === 0){
@@ -118,9 +117,11 @@ async function getLeads(){
                                 for (const link of internalLinks){
                                     await newPage.goto(link);
                                     const secondaryCrawledEmails = await crawl(newPage);
+                                    secondaryCrawledEmails.filter(()=>{
+                                        const emailExists = await 
+                                    })
                                     tempEmails.push(...secondaryCrawledEmails);
                                 }
-                                
                                 await intermidaryCollection.insertOne({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'})
                                 emailsSent++
                                 console.log('We have sent ', emailsSent, 'emails')
@@ -235,7 +236,8 @@ async function getLeads(){
     }catch(error) { 
         console.error('Error Occured:', error);
     }finally{
-        await locationCollection.updateOne({ $set: { index: startingCity, page: startingPage }})
+        const result = await locationCollection.updateOne({ _id: ObjectId('66374edd38ab0b57c8ee1f22')},{ $set: { index: startingCity, page: startingPage }})
+        console.log(result.acknowledged)
         console.log('Reached Max Emails')
         await browser.close();
     }
