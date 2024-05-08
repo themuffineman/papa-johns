@@ -1,4 +1,4 @@
-import {MongoClient} from 'mongodb'
+import {MongoClient, ObjectId} from 'mongodb'
 import puppeteer from 'puppeteer'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -11,6 +11,7 @@ async function getLeads(){
     let emailsSent = 0;
     let locationCollection;
     let intermidaryCollection;
+    let emailsCollection;
 
 
     try {
@@ -19,12 +20,15 @@ async function getLeads(){
         await client.connect()
         locationCollection = client.db('pendora').collection('locations')
         intermidaryCollection = client.db('pendora').collection('intermediary')
-        const document = await locationCollection.findOne()
+        emailsCollection = client.db('pendora').collection('leads')
+        const locationDocument = await locationCollection.findOne()
 
-        const cities = document.cities
+        await intermidaryCollection.deleteMany({})
+
+        const cities = locationDocument.cities
         const service = 'Architects'
-        startingCity = document.index
-        startingPage = document.page
+        startingCity = locationDocument.index
+        startingPage = locationDocument.page
         let maxpages = startingPage+1
 
         console.log('starting page is', startingPage)
@@ -117,10 +121,15 @@ async function getLeads(){
                                 for (const link of internalLinks){
                                     await newPage.goto(link);
                                     const secondaryCrawledEmails = await crawl(newPage);
-                                    secondaryCrawledEmails.filter(()=>{
-                                        const emailExists = await 
+                                    const filteredEmails = secondaryCrawledEmails.filter(async (email)=>{
+                                        const emailsExists = await emailsCollection.findOne({"email": {$eq: email}})
+                                        if(!emailsExists){
+                                            return true
+                                        }else{
+                                            return false
+                                        }
                                     })
-                                    tempEmails.push(...secondaryCrawledEmails);
+                                    tempEmails.push(...filteredEmails);
                                 }
                                 await intermidaryCollection.insertOne({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'})
                                 emailsSent++
@@ -236,9 +245,9 @@ async function getLeads(){
     }catch(error) { 
         console.error('Error Occured:', error);
     }finally{
-        const result = await locationCollection.updateOne({ _id: ObjectId('66374edd38ab0b57c8ee1f22')},{ $set: { index: startingCity, page: startingPage }})
-        console.log(result.acknowledged)
         console.log('Reached Max Emails')
+        const result = await locationCollection.updateOne({ _id: new ObjectId('66374edd38ab0b57c8ee1f22')},{ $set: { index: startingCity, page: startingPage }})
+        console.log(result.acknowledged)
         await browser.close();
     }
 
@@ -270,10 +279,13 @@ async function crawl(page) {
     }
 
     const finalEmails = crawledEmails.filter((email)=>{
-        return (email != undefined && email != null)
+        return email != undefined && email != null
+    })
+    const trulyFinalEmails = finalEmails.filter((email)=>{
+        return !email.includes("wixpress")
     })
 
-    return finalEmails;
+    return trulyFinalEmails; //better name TBD
 }
 
 getLeads()
