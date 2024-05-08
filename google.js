@@ -4,7 +4,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const PORT = 6969
+const PORT = 6969 
 
 const app = express()
 
@@ -260,40 +260,40 @@ app.get('/leads', async (req , res)=>{
         await browser.close();
     }
     
-    async function crawl(page) {
-        const crawledEmails = [];
-    
-        // Extract all <a> tags on the page
-        const links = await page.evaluate(() => {
-            const anchorTags = Array.from(document.querySelectorAll('a'));
-            return anchorTags.map(a => a.href);
-        });
-    
-        const emailLinks = links.filter(link => link.startsWith('mailto:'));
-    
-        emailLinks.forEach(link => {
-            const email = link.replace('mailto:', '');
-            crawledEmails.push(email);
-        });
-    
-        const text = await page.evaluate(() => document.body.textContent);
-    
-        const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-    
-        let match;
-        while ((match = emailRegex.exec(text)) !== null) {
-            crawledEmails.push(match[0]);
-        }
-    
-        const finalEmails = crawledEmails.filter((email)=>{
-            return email != undefined && email != null
-        })
-        const trulyFinalEmails = finalEmails.filter((email)=>{
-            return !email.includes("wixpress")
-        })
-    
-        return trulyFinalEmails; //better name TBD
-    }
 })
 
+async function crawl(page) {
+    const crawledEmails = [];
+
+    // Extract all <a> tags on the page
+    const links = await page.evaluate(() => {
+        const anchorTags = Array.from(document.querySelectorAll('a'));
+        return anchorTags.map(a => a.href);
+    });
+
+    const emailLinks = links.filter(link => link.startsWith('mailto:'));
+
+    emailLinks.forEach(link => {
+        const email = link.replace('mailto:', '');
+        crawledEmails.push(email);
+    });
+
+    const text = await page.evaluate(() => document.body.textContent);
+
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+
+    let match;
+    while ((match = emailRegex.exec(text)) !== null) {
+        crawledEmails.push(match[0]);
+    }
+
+    const finalEmails = crawledEmails.filter((email)=>{
+        return email != undefined && email != null
+    })
+    const trulyFinalEmails = finalEmails.filter((email)=>{
+        return !email.includes("wixpress")
+    })
+
+    return trulyFinalEmails; //better name TBD
+}
 
