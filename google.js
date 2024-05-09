@@ -33,8 +33,6 @@ app.get('/leads', async (req , res)=>{
         emailsCollection = client.db('pendora').collection('leads')
         const locationDocument = await locationCollection.findOne()
 
-        await intermidaryCollection.deleteMany({})
-
         const cities = locationDocument.cities
         const service = 'Architects'
         startingCity = locationDocument.index
