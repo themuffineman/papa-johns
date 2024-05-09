@@ -255,9 +255,12 @@ app.get('/leads', async (req , res)=>{
     }catch(error) { 
         console.error('Error Occured:', error);
     }finally{
-        console.log('Reached Max Emails')
-        const result = await locationCollection.updateOne({ _id: new ObjectId('66374edd38ab0b57c8ee1f22')},{ $set: { index: startingCity, page: startingPage }})
-        console.log(result.acknowledged)
+        if(emailsSent >= 100){
+            console.log('Reached Max Emails')
+            const result = await locationCollection.updateOne({ _id: new ObjectId('66374edd38ab0b57c8ee1f22')},{ $set: { index: startingCity, page: startingPage }})
+            console.log(result.acknowledged)
+        }
+        console.log('Didnt send all emails')
         await browser.close();
     }
     
