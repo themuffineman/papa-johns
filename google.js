@@ -10,18 +10,18 @@ const PORT = 8080
 const app = express()
 
 app.listen(PORT, ()=> {console.log(`Server listening on port ${PORT}`)})
+let browser;
+let startingCity
+let startingPage
+let emailsSent = 0;
+let locationCollection;
+let intermidaryCollection;
+let emailsCollection;
 
 app.get('/leads', async (req , res)=>{
     
     
     console.log('Script is up and running')
-    let browser;
-    let startingCity
-    let startingPage
-    let emailsSent = 0;
-    let locationCollection;
-    let intermidaryCollection;
-    let emailsCollection;
 
 
     try {
