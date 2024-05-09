@@ -2,9 +2,10 @@ import {MongoClient, ObjectId} from 'mongodb'
 import puppeteer from 'puppeteer'
 import express from 'express'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
-const PORT = 6969 
+const PORT = 8080 
 
 const app = express()
 
