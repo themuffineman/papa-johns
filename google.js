@@ -46,6 +46,7 @@ app.get('/leads', async (req , res)=>{
         console.log('Current City:', cities[startingCity])
 
         browser = await puppeteer.launch({
+            timeout: 180000,
             executablePath: process.env.NODE_ENV === 'production' ?
                 process.env.PUPPETERR_EXECUTABLE_PATH:
                 puppeteer.executablePath(),
@@ -55,7 +56,6 @@ app.get('/leads', async (req , res)=>{
             ],
         });
         console.log('Puppeteer is launched')
-
 
         //Loop to scrape the whole city
         while(emailsSent < 100){
