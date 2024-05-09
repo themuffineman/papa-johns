@@ -37,7 +37,7 @@ app.get('/leads', async (req , res)=>{
         const service = 'Architects'
         startingCity = locationDocument.index
         startingPage = locationDocument.page
-        let maxpages = startingPage+1
+        let maxpages = startingPage+10
 
         console.log('starting page is', startingPage)
         console.log('max pages page is', maxpages)
