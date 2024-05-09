@@ -1,3 +1,11 @@
+const puppeteer = require('puppeteer');
+const express = require('express');
+const WebSocket = require('ws');
+const cors = require('cors');
+require('dotenv').config();
+
+
+
 // import {MongoClient, ObjectId} from 'mongodb'
 // import puppeteer from 'puppeteer'
 // import express from 'express'
@@ -299,21 +307,9 @@
 //     return trulyFinalEmails; //better name TBD
 // }
 
-
-
-
-
-import puppeteer from 'puppeteer'
-import express from 'express'
-import WebSocket from 'ws';
-import cors from 'cors'
-import dotenv from 'dotenv'
-dotenv.config()
-
 const app = express();
 
 const port = 8080;
-
 
 app.use(cors({
     origin: '*'
@@ -321,48 +317,11 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
 const wss = new WebSocket.Server({ server });
-
-function broadcast(message) {
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
-        }
-    });
-}
-
-server.on('close', () => {
-    wss.clients.forEach(client => {
-        client.terminate();
-    });
-    console.log('WebSocket connections closed.');
-});
-
-process.on('exit', () => {
-    // Close the WebSocket connection
-    if (ws.readyState === WebSocket.OPEN) {
-        wss.clients.forEach(client => {
-            client.terminate();
-        });
-        wss.close();
-    }
-});
-app.get('/cancel', async(req,res)=>{
-    wss.clients.forEach(client => {
-        client.terminate();
-    });
-    wss.close();
-    res.status(200).send('Connections Manually Closed');
-    console.log('Connections Manually Closed')
-    process.exit(0);
-})
-
-
 
 app.get('/scrape', async(req, res) => {
     let browser;
@@ -597,6 +556,41 @@ app.get('/scrape', async(req, res) => {
         return crawledEmails;
     }
 });
+
+function broadcast(message) {
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(message);
+        }
+    });
+}
+
+server.on('close', () => {
+    wss.clients.forEach(client => {
+        client.terminate();
+    });
+    console.log('WebSocket connections closed.');
+});
+
+process.on('exit', () => {
+    // Close the WebSocket connection
+    if (ws.readyState === WebSocket.OPEN) {
+        wss.clients.forEach(client => {
+            client.terminate();
+        });
+        wss.close();
+    }
+});
+app.get('/cancel', async(req,res)=>{
+    wss.clients.forEach(client => {
+        client.terminate();
+    });
+    wss.close();
+    res.status(200).send('Connections Manually Closed');
+    console.log('Connections Manually Closed')
+    process.exit(0);
+})
+
 
 
 
