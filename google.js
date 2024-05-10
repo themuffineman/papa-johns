@@ -418,7 +418,7 @@ app.get('/scrape', async(req, res) => {
                                 tempEmails.push(...secondaryCrawledEmails);
                             }
                             
-                            broadcast(JSON.stringify({ name: businessName, url, emails: [...new Set(tempEmails)], platform: 'google'}));
+                            broadcast(JSON.stringify({ name: businessName, tempName: businessName, url, emails: [...new Set(tempEmails)]}));
         
                         } catch (error) {
                             console.error(`Error navigating to ${url}: ${error}`);
