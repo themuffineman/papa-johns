@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const express = require('express');
 const WebSocket = require('ws');
 const cors = require('cors');
+const fetch = require('node-fetch');
 require('dotenv').config();
 
 
@@ -580,14 +581,14 @@ process.on('exit', () => {
         wss.close();
     }
 });
-app.get('/cancel', async(req,res)=>{
-    wss.clients.forEach(client => {
-        client.terminate();
-    });
-    wss.close();
-    res.status(200).send('Connections Manually Closed');
-    console.log('Connections Manually Closed')
-    process.exit(0);
+app.get('/', (_,res)=>{  
+    res.send('hello world')
+   setInterval(async()=>{
+    fetch(`https://papa-johns.onrender.com`)
+    .then((res)=>{
+
+    })
+   }, 10000)
 })
 
 
