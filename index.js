@@ -318,9 +318,7 @@ const scraper = async ({ service, location, pageNumber, clientId }) => {
             : puppeteer.executablePath(),
         args: [
           `--disable-setuid-sandbox`,
-          // `--single-process`,
-          `--no-sandbox,`,
-          // `--no-zygote`,
+          `--no-sandbox`,
           `--disable-dev-shm-usage`,
         ],
       });
