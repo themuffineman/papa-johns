@@ -311,11 +311,6 @@ const scraper = async ({ service, location, pageNumber, clientId }) => {
       const intPageNumber = 1; //parseInt(pageNumber);
 
       browser = await puppeteer.launch({
-        headless: false,
-        executablePath:
-          process.env.NODE_ENV === "production"
-            ? process.env.PUPPETERR_EXECUTABLE_PATH
-            : puppeteer.executablePath(),
         args: [
           `--disable-setuid-sandbox`,
           `--no-sandbox`,
