@@ -479,7 +479,8 @@ const scraper = async ({ service, location, pageNumber, clientId }) => {
       message: `Error occurred: ${error.message}`,
     });
   } finally {
-    await browser.close();
+    browser && (await browser.close());
+
     return;
   }
 
