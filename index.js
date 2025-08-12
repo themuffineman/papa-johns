@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 const express = require("express");
 const { WebSocketServer } = require("ws");
 const { v4: uuidv4 } = require("uuid");
+const WS_OPEN = require("ws").OPEN;
 require("dotenv").config();
 
 const WSPORT = 8080;
@@ -281,7 +282,7 @@ app.get("/ping", (_, res) => {
 
 function broadcast({ message, type, id }) {
   const ws = clients.get(id);
-  if (ws && ws.readyState === WebSocket.OPEN) {
+  if (ws && ws.readyState === WS_OPEN) {
     ws.send(
       JSON.stringify({
         message,
