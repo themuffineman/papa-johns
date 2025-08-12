@@ -45,6 +45,7 @@ wss.on("connection", (ws, request) => {
       message: "Missing Details",
       type: "error",
     });
+    ws.close();
   }
   scraper({
     clientId: uuid,
@@ -234,7 +235,7 @@ app.post("/scrape", async (req, res) => {
     });
     res.status(500).send("Internal Server Error");
   } finally {
-    await browser.close();
+    browser && (await browser.close());
   }
 
   async function crawl(page) {
